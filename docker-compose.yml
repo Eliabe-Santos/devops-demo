@@ -1,11 +1,11 @@
 services:
-  backend:
-    build: ./backend
-    environment:
-      - PORT=4000
-      - APP_VERSION=1.1.0
-    ports:
-      - "4000:4000"
+backend:
+  build: ./backend
+  environment:
+    - PORT=4000
+    - APP_VERSION=${APP_VERSION}
+  ports:
+    - "4000:4000"
 
   frontend:
     build: ./frontend
