@@ -1,3 +1,4 @@
+
 name: Deploy to AWS
 
 on:
@@ -18,13 +19,16 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.AWS_SSH_KEY }}
 
+      - name: Set version
+        run: echo "APP_VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.AWS_HOST }} << 'EOF'
             cd ~/devops-demo || git clone https://github.com/${{ github.repository }} devops-demo
             cd devops-demo
             git pull origin master
+            export APP_VERSION=${APP_VERSION}
             docker-compose down
             docker-compose up -d --build
-
           EOF
