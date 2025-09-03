@@ -3,7 +3,7 @@ services:
     build: ./backend
     environment:
       - PORT=4000
-      - APP_VERSION=1.0.0
+      - APP_VERSION=1.1.0
     ports:
       - "4000:4000"
 
