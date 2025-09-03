@@ -26,15 +26,13 @@ jobs:
             git reset --hard
             git pull origin master
 
-            # Definir versão do app usando hash curto do commit
+            # Define a versão usando hash do commit
             export APP_VERSION=$(git rev-parse --short HEAD)
 
-            # Parar containers antigos
             docker-compose down
 
-            # Rebuild do backend com build-arg APP_VERSION
-            docker-compose build --no-cache backend
+            # Passar o build-arg para o backend
+            docker-compose build --no-cache --build-arg APP_VERSION=$APP_VERSION backend
 
-            # Subir containers
             docker-compose up -d
           EOF

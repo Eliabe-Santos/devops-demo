@@ -5,7 +5,7 @@ services:
     build:
       context: ./backend
       args:
-        APP_VERSION: ${APP_VERSION}  # Passa a variável para o build
+        APP_VERSION: ${APP_VERSION}  # passa a variável para o build
     ports:
       - "4000:4000"
 
