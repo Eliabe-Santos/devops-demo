@@ -1,11 +1,13 @@
+version: '3.9'
+
 services:
-backend:
-  build: ./backend
-  environment:
-    - PORT=4000
-    - APP_VERSION=${APP_VERSION}
-  ports:
-    - "4000:4000"
+  backend:
+    build:
+      context: ./backend
+      args:
+        APP_VERSION: ${APP_VERSION}  # Passa a variável para o build
+    ports:
+      - "4000:4000"
 
   frontend:
     build: ./frontend

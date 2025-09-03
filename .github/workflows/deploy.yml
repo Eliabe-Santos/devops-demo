@@ -10,32 +10,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Passo 1: Clonar o repositório
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Passo 2: Configurar SSH
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.AWS_SSH_KEY }}
 
-      # Passo 3: Deploy na EC2
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.AWS_HOST }} << EOF
-            # Navegar para a pasta do projeto (ou clonar se não existir)
             cd ~/devops-demo || git clone https://github.com/${{ github.repository }} devops-demo
             cd devops-demo
-
-            # Garantir que estamos na versão correta e atualizar do Git
             git reset --hard
             git pull origin master
 
-            # Exportar variável de ambiente com a versão do commit
+            # Definir versão do app usando hash curto do commit
             export APP_VERSION=$(git rev-parse --short HEAD)
 
             # Parar containers antigos
             docker-compose down
 
-            # Rec
+            # Rebuild do backend com build-arg APP_VERSION
+            docker-compose build --no-cache backend
+
+            # Subir containers
+            docker-compose up -d
+          EOF
