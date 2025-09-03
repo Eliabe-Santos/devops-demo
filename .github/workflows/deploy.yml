@@ -1,4 +1,3 @@
-
 name: Deploy to AWS
 
 on:
@@ -20,12 +19,15 @@ jobs:
           ssh-private-key: ${{ secrets.AWS_SSH_KEY }}
 
       - name: Deploy to EC2
-  run: |
-    ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.AWS_HOST }} << EOF
-      cd ~/devops-demo || git clone https://github.com/${{ github.repository }} devops-demo
-      cd devops-demo
-      git pull origin master
-      export APP_VERSION=$(git rev-parse --short HEAD)
-      docker-compose down
-      docker-compose up -d --build
-      EOF
+        run: |
+          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.AWS_HOST }} << EOF
+            cd ~/devops-demo || git clone https://github.com/${{ github.repository }} devops-demo
+            cd devops-demo
+            git reset --hard
+            git pull origin master
+            export APP_VERSION=$(git rev-parse --short HEAD)
+            docker-compose down
+            docker-compose build --no-cache
+            docker-compose up -d
+          EOF
+
